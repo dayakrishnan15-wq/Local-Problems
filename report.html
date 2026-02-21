@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Problem</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="report-style.css">
+    <link rel="stylesheet" href="contact-style.css">
+</head>
+<body>
+
+<header>
+    <h1>Local Problem Reporting</h1>
+    <p>Click below to report a problem or complaint</p>
+</header>
+
+<main>
+    <div class="report-container">
+        <!-- Button to open the complaint form -->
+        <button id="reportBtn" class="report-btn">Report Problem</button>
+
+        <!-- Hidden form initially -->
+        <form id="complaintForm" class="report-form" action="#" method="POST" enctype="multipart/form-data">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="title">Problem / Complaint Title</label>
+            <input type="text" id="title" name="title" placeholder="Short title of the problem" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="5" placeholder="Describe the problem in detail" required></textarea>
+
+            <label for="image">Upload an Image (optional)</label>
+            <input type="file" id="image" name="image" accept="image/*">
+
+            <button type="submit">Submit Report</button>
+        </form>
+    </div>
+</main>
+
+<script>
+const reportBtn = document.getElementById('reportBtn');
+const complaintForm = document.getElementById('complaintForm');
+
+reportBtn.addEventListener('click', () => {
+    complaintForm.style.display = complaintForm.style.display === 'block' ? 'none' : 'block';
+    reportBtn.style.display = 'none';
+});
+
+// SAVE REPORT TO LOCAL STORAGE
+complaintForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let reports = JSON.parse(localStorage.getItem("reports")) || [];
+
+    let newReport = {
+        id: Date.now(),
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        status: "Pending"
+    };
+
+    reports.push(newReport);
+    localStorage.setItem("reports", JSON.stringify(reports));
+
+    alert("Report submitted successfully!");
+
+    complaintForm.reset();
+});
+</script>
+</body>
+</html>
