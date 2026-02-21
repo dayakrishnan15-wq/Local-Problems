@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Reports</title>
+    <link rel="stylesheet" href="view-style.css">
+</head>
+
+<body>
+
+<h2>Submitted Reports</h2>
+
+<div id="reportsContainer"></div>
+
+<script>
+function loadReports() {
+    let reports = JSON.parse(localStorage.getItem("reports")) || [];
+    let container = document.getElementById("reportsContainer");
+    container.innerHTML = "";
+
+    if (reports.length === 0) {
+        container.innerHTML = "<p>No reports found.</p>";
+        return;
+    }
+
+    reports.forEach((report, index) => {
+        container.innerHTML += `
+            <div class="report-box">
+                <p><strong>Name:</strong> ${report.name}</p>
+                <p><strong>Email:</strong> ${report.email}</p>
+                <p><strong>Problem Title:</strong> ${report.title}</p>
+                <p><strong>Description:</strong> ${report.description}</p>
+                <p><strong>Status:</strong> 
+                    <span id="status-${index}">${report.status}</span>
+                </p>
+
+                <select onchange="updateStatus(${index}, this.value)">
+                    <option value="Pending" ${report.status=="Pending"?"selected":""}>Pending</option>
+                    <option value="In Progress" ${report.status=="In Progress"?"selected":""}>In Progress</option>
+                    <option value="Resolved" ${report.status=="Resolved"?"selected":""}>Resolved</option>
+                </select>
+            </div>
+        `;
+    });
+}
+
+function updateStatus(index, newStatus) {
+    let reports = JSON.parse(localStorage.getItem("reports"));
+    reports[index].status = newStatus;
+    localStorage.setItem("reports", JSON.stringify(reports));
+    loadReports();
+}
+
+loadReports();
+</script>
+
+</body>
+</html>
